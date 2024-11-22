@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"tlssniffer/internal/sniffer"
-	"tlssniffer/internal/testutil"
+	"TLSMonitor/internal/sniffer"
+	"TLSMonitor/internal/testutil"
 )
 
 func TestTLSHandshakeCapture(t *testing.T) {

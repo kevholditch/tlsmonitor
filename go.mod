@@ -1,4 +1,4 @@
-module tlssniffer
+module TLSMonitor
 
 go 1.23.3
 
