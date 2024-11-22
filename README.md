@@ -21,4 +21,4 @@ This project is currently a work in progress. The aim is to build a network moni
 
 ## Installation
 
-go install github.com/you/tlsmonitor@
+go install github.com/kevholditch/tlsmonitor@latest
