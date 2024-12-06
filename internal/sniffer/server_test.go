@@ -46,10 +46,11 @@ func TestTLSHandshakeCapture(t *testing.T) {
 
 	// Wait for certificate information
 	select {
-	case certInfo := <-sniffer.CertificatesChan:
+	case cert := <-sniffer.CertificatesChan:
 		// Verify certificate details
-		if certInfo.Organization != "Test Corp" {
-			t.Errorf("Unexpected subject: got %s, want O=Test Corp", certInfo.Organization)
+		if len(cert.Subject.Organization) == 0 || cert.Subject.Organization[0] != "Test Corp" {
+			t.Errorf("Unexpected organization: got %v, want Test Corp",
+				cert.Subject.Organization)
 		}
 		// Add more certificate checks as needed
 	case <-time.After(5 * time.Minute):

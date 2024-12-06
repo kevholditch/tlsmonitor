@@ -2,7 +2,6 @@ package sniffer
 
 import (
 	"fmt"
-	"time"
 
 	"crypto/x509"
 
@@ -12,28 +11,18 @@ import (
 	"github.com/google/gopacket/tcpassembly"
 )
 
-// CertificateInfo stores information about observed certificates
-type CertificateInfo struct {
-	Subject      string
-	Organization string
-	Issuer       string
-	NotBefore    time.Time
-	NotAfter     time.Time
-	SerialNumber string
-}
-
 // Sniffer represents the TLS monitoring server
 type Sniffer struct {
 	Port             int
 	handle           *pcap.Handle
-	CertificatesChan chan CertificateInfo
+	CertificatesChan chan *x509.Certificate
 }
 
 // New creates a new Sniffer instance
 func New(port int) *Sniffer {
 	return &Sniffer{
 		Port:             port,
-		CertificatesChan: make(chan CertificateInfo, 100),
+		CertificatesChan: make(chan *x509.Certificate, 100),
 	}
 }
 
@@ -145,16 +134,7 @@ func (s *tlsStream) Reassembled(reassemblies []tcpassembly.Reassembly) {
 							continue
 						}
 
-						certInfo := CertificateInfo{
-							Subject:      cert.Subject.CommonName,
-							Organization: cert.Subject.Organization[0],
-							Issuer:       cert.Issuer.CommonName,
-							NotBefore:    cert.NotBefore,
-							NotAfter:     cert.NotAfter,
-							SerialNumber: cert.SerialNumber.String(),
-						}
-
-						s.server.CertificatesChan <- certInfo
+						s.server.CertificatesChan <- cert
 						return
 					}
 				}
